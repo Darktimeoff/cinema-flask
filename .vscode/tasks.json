@@ -1,0 +1,96 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Run SPA",
+        "type": "shell",
+        "command": "cd frontend && npm run start",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new",
+          "group": "develop",
+        },
+        // "runOptions": {
+        //   "runOn": "folderOpen"
+        // }
+      },
+      {
+        "label": "Run MakeMigration",
+        "type": "shell",
+        "command": "cd backend && pipenv run flask --app main.py db migrate -m \"${input:message}\"",
+      },
+      {
+        "label": "Run Migrate",
+        "type": "shell",
+        "command": "cd backend && pipenv run flask --app main.py db upgrade",
+      },
+      {
+        "label": "Run Undo Migration",
+        "type": "shell",
+        "command": "cd backend && pipenv run flask --app main.py db downgrade",
+      },
+      {
+        "label": "Run BACK",
+        "type": "shell",
+        "command": "cd backend && pipenv run python3 app.py",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new",
+          "group": "develop",
+        },
+        // "runOptions": {
+        //   "runOn": "folderOpen"
+        // }
+      },
+      {
+        "label": "Run TEST",
+        "type": "shell",
+        "command": "cd backend && pipenv run python3 -m pytest -v -s",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new",
+          "group": "develop",
+        },
+        // "runOptions": {
+        //   "runOn": "folderOpen"
+        // }
+      },
+      {
+        "label": "Run CREATE TABLE",
+        "type": "shell",
+        "command": "cd backend && pipenv run python3 create_table.py",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new",
+          "group": "develop",
+        },
+      },
+      {
+        "label": "Run DROP TABLE",
+        "type": "shell",
+        "command": "cd backend && pipenv run python3 drop_table.py",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new",
+          "group": "develop",
+        },
+      },
+      {
+        "label": "Run LOAD DATA TO DB",
+        "type": "shell",
+        "command": "cd backend && pipenv run python3 load_fixtures.py",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new",
+          "group": "develop",
+        },
+      },
+    ],
+    "inputs": [
+      {
+        "id": "message",
+        "type": "promptString",
+        "description": ""
+      }
+    ],
+}
