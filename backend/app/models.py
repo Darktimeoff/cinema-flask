@@ -1,6 +1,8 @@
-from .setup.db.models import Base
-from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+
+from .setup.db.models import Base
+
 
 class Genre(Base):
     __tablename__ = 'genres'
@@ -12,13 +14,13 @@ class Genre(Base):
     def __repr__(self) -> str:
         return f'<Director id={self.pk} title={self.name} />'
 
+
 class Director(Base):
     __tablename__ = 'directors'
-    
+
     name = Column(String(100))
 
     movies = relationship('Movie', back_populates='directors')
-
 
     def __repr__(self) -> str:
         return f'<Director id={self.pk} title={self.name} />'
@@ -39,9 +41,9 @@ class Movie(Base):
     genre = relationship(Genre, back_populates='movies')
     directors = relationship(Director, back_populates='movies')
 
-
     def __repr__(self) -> str:
         return f'<Movie id={self.pk} title={self.title} />'
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -54,4 +56,4 @@ class User(Base):
 
     favorite_genre_id = Column(Integer, ForeignKey('genres.id'))
 
-    favorite_genre  = relationship(Genre)
+    favorite_genre = relationship(Genre)
