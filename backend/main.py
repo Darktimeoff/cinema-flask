@@ -15,7 +15,7 @@ basicConfig(filename='basic.log')
 
 
 def base_service_error_handler(exception: BasicHTTPError):
-    return jsonify({'message': str(exception), "status": -1}), exception.code
+    return jsonify({'message': str(exception), "status": exception.status_code}), exception.code
 
 
 def create_app(config) -> Flask:
