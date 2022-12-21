@@ -13,24 +13,24 @@ def str_to_hashfunc(s: str) -> str:
     hash_digest = pbkdf2_hmac(
         get_env('HASH_ALG'),
         s.encode('utf-8'),
-        get_env('SALT'),
-        get_env('HASH_ITR'),
+        get_env('SALT').encode('utf-8'),
+        int(get_env('HASH_ITR')),
     )
-
-    return b64encode(hash_digest)
+ 
+    return b64encode(hash_digest).decode('utf-8')
 
 
 def compare_hashfunc(hash_func: str, s2: str) -> bool:
-    hash_func2 = b64decode(str_to_hashfunc(s2))
-    hash_func = b64decode(hash_func)
+    hash_func_byte = b64decode(str_to_hashfunc(s2).encode('utf-8'))
+    hash_func_byte_2 = b64decode(hash_func.encode('utf-8'))
 
-    return hmac.compare_digest(hash_func, hash_func2)
+    return hmac.compare_digest(hash_func_byte, hash_func_byte_2)
 
 
-def generate_jwt(data: dict, delta) -> str:
+def generate_jwt(data: dict, delta: datetime.timedelta) -> str:
     timedelta = datetime.datetime.utcnow() + delta
 
-    delta['exp'] = calendar.timegm(timedelta.timetuple())
+    data['exp'] = calendar.timegm(timedelta.timetuple())
 
     return jwt.encode(
         payload=data,

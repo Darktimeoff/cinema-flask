@@ -1,13 +1,13 @@
 from app.exceptions.http import BadRequestError, NotFoundError
 from app.exceptions.service import UniqueError, ValidationError
 from app.models import User
-from app.user.container import user_schema
+from app.container import user_schema
 from app.user.service import UserService
 from app.utils.security import decode_jwt, get_access_token, get_refresh_token
 
 from .const import (UNCORECT_TYPE_EMAIL_PASSWORD, UNCORECT_TYPE_REFRESH_TOKEN,
                     USER_EXISTS, USER_NOT_FOUND, USER_PASSWORD_WRONG,
-                    USER_WRONG_REFRESH_TOKEN)
+                    USER_WRONG_REFRESH_TOKEN, INVALID_TOKEN_TYPE)
 
 
 class AuthService:
@@ -16,21 +16,27 @@ class AuthService:
     def __init__(self, user_service: UserService):
         self.user_service = user_service
 
-    def generate_tokens(self, email: str, password: str, refresh_token: str) -> dict:
-        if type(email) is not str or type(password) is not str:
+    def generate_tokens(self, email: str, password: str, refresh_token: str, is_refresh: bool = None) -> dict:
+        if type(email) is not str:
             raise ValidationError(
-                message=UNCORECT_TYPE_EMAIL_PASSWORD, status_code=1)
+                    message=UNCORECT_TYPE_EMAIL_PASSWORD, status_code=1)
+
 
         user = self.user_service.get_by_email(email)
 
         if not user:
-            raise NotFoundError(message=USER_NOT_FOUND, status_code=2)
+            raise NotFoundError(message=UNCORECT_TYPE_EMAIL_PASSWORD, status_code=2)
 
-        if not self.user_service.compare_password(user.password, password):
-            raise BadRequestError(
-                message=USER_PASSWORD_WRONG, status_code=3)
+        if not is_refresh:
+            if password is not str:
+                raise ValidationError(
+                    message=UNCORECT_TYPE_EMAIL_PASSWORD, status_code=1)
 
-        if refresh_token and not (user.refresh_token != refresh_token):
+            if not self.user_service.compare_password(user.password, password):
+                raise BadRequestError(
+                    message=USER_PASSWORD_WRONG, status_code=3)
+
+        if refresh_token and user.refresh_token != refresh_token:
             raise BadRequestError(
                 message=USER_WRONG_REFRESH_TOKEN, status_code=4)
 
@@ -54,10 +60,14 @@ class AuthService:
         return user
 
     def register(self, email: str, password: str) -> dict:
+        if type(email) is not str or type(password) is not str:
+            raise ValidationError(
+                message=UNCORECT_TYPE_EMAIL_PASSWORD, status_code=1)
+
         user = self.user_service.get_by_email(email)
 
         if user:
-            raise UniqueError(message=USER_EXISTS, status_code=1)
+            raise UniqueError(message=USER_EXISTS, status_code=2)
 
         data = {
             'email': email,
@@ -71,9 +81,11 @@ class AuthService:
         return tokens
 
     def login(self, email: str, password: str, refresh_token: str = None) -> dict:
-        tokens = self.generate_tokens(email, password)
+        tokens = self.generate_tokens(email, password, refresh_token)
 
-        user = self.update_user_refresh_token(user, tokens, refresh_token)
+        user = self.user_service.get_by_email(email)
+
+        self.update_user_refresh_token(user, tokens)
 
         return tokens
 
@@ -82,13 +94,16 @@ class AuthService:
             raise ValidationError(
                 message=UNCORECT_TYPE_REFRESH_TOKEN, status_code=1)
 
-        data = decode_jwt(refresh_token)
+        data = None
+        try:
+            data = decode_jwt(refresh_token)
+        except Exception as e:
+            raise BadRequestError(message=INVALID_TOKEN_TYPE, status_code=2)
+      
+        tokens = self.generate_tokens(data['email'], None, refresh_token, True)
 
         user = self.user_service.get_by_email(data['email'])
 
-        if not user:
-            raise NotFoundError(message=USER_NOT_FOUND, status_code=2)
-
-        tokens = self.login(user.email, user.password, user.refresh_token)
+        self.update_user_refresh_token(user, tokens)
 
         return tokens

@@ -28,4 +28,5 @@ class UserSchema(BaseSchema):
     password = fields.String(load_only=True, required=True)
     name = fields.String()
     surname = fields.String()
+    refresh_token = fields.String(load_only=True)
 

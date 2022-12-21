@@ -4,7 +4,7 @@ from app.utils.security import compare_hashfunc, str_to_hashfunc
 
 from .const import (INVALID_BODY, INVALID_ID_TYPE, INVALID_KEYS_FOR_UPDATE,
                     USER_NOT_FOUND)
-from .container import user_schema
+from app.container import user_schema
 from .dao import UserDAO
 
 
@@ -35,10 +35,10 @@ class UserService:
         errors = user_schema.validate(data)
 
         if errors:
-            raise ValidationError(errors[0], status_code=2)
+            raise ValidationError(list(errors.items())[0][1][0], status_code=2)
 
         data['password'] = self.generate_password(data['password'])
-
+    
         return self.dao.create(data)
 
     def update(self, id: int, data: dict):
@@ -48,8 +48,9 @@ class UserService:
         if type(data) is not dict:
             raise ValidationError(message=INVALID_BODY, status_code=2)
 
-        keys = set(user_schema.fields.keys())
+        keys = set(user_schema.declared_fields.keys())
         data_keys = set(data.keys())
+        print('keys______', keys, data_keys)
 
         if not data_keys.issubset(keys):
             raise ValidationError(
@@ -84,4 +85,4 @@ class UserService:
         return str_to_hashfunc(password)
 
     def compare_password(self, password_user: str, password: str) -> bool:
-        return compare_hashfunc(password_user, password_user)
+        return compare_hashfunc(password_user, password)
