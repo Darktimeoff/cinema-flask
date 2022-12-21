@@ -20,8 +20,8 @@ class MovieSchema(BaseSchema):
     year = fields.Integer(required=True)
     rating = fields.Integer(required=True)
 
-    genre = fields.Nested(GenreSchema, dump_only=True)
-    director = fields.Nested(DirectorSchema, dump_only=True)
+    genre = fields.Nested(lambda: GenreSchema(exclude=('movies', )), dump_only=True)
+    director = fields.Nested(lambda: DirectorSchema(exclude=('movies', )), dump_only=True)
 
 class UserSchema(BaseSchema):
     email = fields.Email(required=True)

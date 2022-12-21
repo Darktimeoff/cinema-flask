@@ -11,9 +11,11 @@ class MovieService:
         self.dao = dao
 
     def get_all(self, status=None):
-        query = self.dao.query
+        query = self.dao.get_query()
+
         if status == 'new':
-            query = query.order_by(desc(Movie.year))
+            query = self.dao.order_by_year()
+
         return query
     
     def get_by_id(self, id: int) -> Movie:
