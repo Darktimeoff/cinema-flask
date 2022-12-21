@@ -1,7 +1,7 @@
-from app.movies.dao.movie import MovieDao
+from backend.app.movies.dao import MovieDao
 from app.models import Movie
 from app.exceptions.http import BadRequestError, NotFoundError
-from app.movies.const.service import UNCORECT_ID_TYPE, MOVIE_NOT_FOUND
+from backend.app.movies.const import UNCORECT_ID_TYPE, MOVIE_NOT_FOUND
 from sqlalchemy import desc
 
 class MovieService:

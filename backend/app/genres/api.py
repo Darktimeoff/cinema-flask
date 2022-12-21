@@ -1,5 +1,4 @@
 from app.decorators.api import pagination, serialized
-from flask import request
 from flask_restx import Namespace, Resource
 
 from .container import genre_schema, genre_schemas, genre_service

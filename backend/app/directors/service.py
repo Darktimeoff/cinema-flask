@@ -1,5 +1,5 @@
-from app.directors.const.service import DIRECTOR_NOT_FOUND, UNCORECT_ID_TYPE
-from app.directors.dao.director import DirectorDao
+from backend.app.directors.const import DIRECTOR_NOT_FOUND, UNCORECT_ID_TYPE
+from backend.app.directors.dao import DirectorDao
 from app.exceptions.http import BadRequestError, NotFoundError
 from app.models import Director
 

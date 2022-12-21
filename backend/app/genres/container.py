@@ -2,8 +2,8 @@ from app.models import Genre
 from app.schemas import GenreSchema
 from app.setup.db import db
 
-from .dao.genre import GenreDAO
-from .services.genre import GenreService
+from .dao import GenreDAO
+from .service import GenreService
 
 genre_schema = GenreSchema()
 genre_schemas = GenreSchema(many=True)
