@@ -20,7 +20,7 @@ class Director(Base):
 
     name = Column(String(100))
 
-    movies = relationship('Movie', back_populates='directors')
+    movies = relationship('Movie', back_populates='director')
 
     def __repr__(self) -> str:
         return f'<Director id={self.pk} title={self.name} />'
@@ -39,7 +39,7 @@ class Movie(Base):
     director_id = Column(Integer, ForeignKey('directors.id'))
 
     genre = relationship(Genre, back_populates='movies')
-    directors = relationship(Director, back_populates='movies')
+    director = relationship(Director, back_populates='movies')
 
     def __repr__(self) -> str:
         return f'<Movie id={self.pk} title={self.title} />'
