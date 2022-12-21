@@ -22,3 +22,10 @@ class MovieSchema(BaseSchema):
 
     genre = fields.Nested(GenreSchema, dump_only=True)
     director = fields.Nested(DirectorSchema, dump_only=True)
+
+class UserSchema(BaseSchema):
+    email = fields.Email(required=True)
+    password = fields.String(load_only=True, required=True)
+    name = fields.String()
+    surname = fields.String()
+
