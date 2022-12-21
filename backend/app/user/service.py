@@ -14,6 +14,17 @@ class UserService:
     def __init__(self, dao: UserDAO):
         self.dao = dao
 
+    def get_by_id(self, id: int):
+        if type(id) is not int:
+            raise ValidationError(message=INVALID_ID_TYPE, status_code=1)
+
+        user = self.dao.get_by_id(id)
+
+        if not user:
+            raise NotFoundError(message=USER_NOT_FOUND, status_code=2)
+
+        return user
+
     def create(self, data: dict):
         if type(data) is not dict:
             raise ValidationError(message=INVALID_BODY, status_code=1)
