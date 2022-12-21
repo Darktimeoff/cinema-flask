@@ -1,23 +1,24 @@
-from flask import request
-from flask_restx import Resource, Namespace
 from app.decorators.api import pagination, serialized
-from .container import movie_schemas, movie_service, movie_schema
+from flask import request
+from flask_restx import Namespace, Resource
 
-movie_ns = Namespace('movies')
+from .container import director_schema, director_schemas, director_service
 
-@movie_ns.route('/')
-class Movies(Resource):
-    @serialized(movie_schemas)
+director_ns = Namespace('directors')
+
+
+@director_ns.route('/')
+class Directors(Resource):
+    @serialized(director_schemas)
     @pagination(12)
     def get(self):
-        status = request.args.get('status', None)
+        return director_service.get_all()
 
-        return movie_service.get_all(status)
 
-@movie_ns.route('/<int:movie_id>/')
-class Movie(Resource):
-    @serialized(movie_schema)
-    def get(self, movie_id: int):
-        movie = movie_service.get_by_id(movie_id)
-    
-        return movie 
+@director_ns.route('/<int:director_id>/')
+class Director(Resource):
+    @serialized(director_schema)
+    def get(self, director_id: int):
+        director = director_service.get_by_id(director_id)
+
+        return director

@@ -12,7 +12,7 @@ class Genre(Base):
     movies = relationship('Movie', back_populates='genre')
 
     def __repr__(self) -> str:
-        return f'<Director id={self.pk} title={self.name} />'
+        return f'<Director id={self.id} title={self.name} />'
 
 
 class Director(Base):
@@ -23,7 +23,7 @@ class Director(Base):
     movies = relationship('Movie', back_populates='director')
 
     def __repr__(self) -> str:
-        return f'<Director id={self.pk} title={self.name} />'
+        return f'<Director id={self.id} title={self.name} />'
 
 
 class Movie(Base):
@@ -42,7 +42,7 @@ class Movie(Base):
     director = relationship(Director, back_populates='movies')
 
     def __repr__(self) -> str:
-        return f'<Movie id={self.pk} title={self.title} />'
+        return f'<Movie id={self.id} title={self.title} />'
 
 
 class User(Base):

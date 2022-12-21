@@ -1,11 +1,12 @@
-from .services.movie import MovieService
-from .dao.movie import MovieDao
-from app.models import Movie
+from app.models import Director
+from app.schemas import DirectorSchema
 from app.setup.db import db
-from app.schemas import MovieSchema
 
-movie_schema = MovieSchema()
-movie_schemas = MovieSchema(many=True)
+from .dao.director import DirectorDao
+from .services.director import DirectorService
 
-movie_dao = MovieDao(Movie, db)
-movie_service = MovieService(movie_dao)
+director_schema = DirectorSchema()
+director_schemas = DirectorSchema(many=True)
+
+director_dao = DirectorDao(Director, db)
+director_service = DirectorService(director_dao)
