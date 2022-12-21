@@ -1,6 +1,6 @@
 from app.exceptions.http import BadRequestError, NotFoundError
-from app.genres.const.service import GENRE_NOT_FOUND, UNCORECT_ID_TYPE
-from backend.app.genres.dao import GenreDAO
+from .const import GENRE_NOT_FOUND, UNCORECT_ID_TYPE
+from .dao import GenreDAO
 from app.models import Genre
 
 
