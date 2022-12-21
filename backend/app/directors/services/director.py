@@ -2,7 +2,6 @@ from app.directors.const.service import DIRECTOR_NOT_FOUND, UNCORECT_ID_TYPE
 from app.directors.dao.director import DirectorDao
 from app.exceptions.http import BadRequestError, NotFoundError
 from app.models import Director
-from sqlalchemy import desc
 
 
 class DirectorService:
@@ -18,9 +17,9 @@ class DirectorService:
         if type(id) is not int:
             raise BadRequestError(message=UNCORECT_ID_TYPE, status_code=1)
 
-        movie = self.dao.get_by_id(id)
+        director = self.dao.get_by_id(id)
 
-        if not movie:
+        if not director:
             raise NotFoundError(message=DIRECTOR_NOT_FOUND, status_code=2)
 
-        return movie
+        return director
