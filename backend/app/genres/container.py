@@ -1,11 +1,12 @@
-from .services.movie import MovieService
-from .dao.movie import MovieDao
-from app.models import Movie
+from app.models import Genre
+from app.schemas import GenreSchema
 from app.setup.db import db
-from app.schemas import MovieSchema
 
-movie_schema = MovieSchema()
-movie_schemas = MovieSchema(many=True)
+from .dao.genre import GenreDAO
+from .services.genre import GenreService
 
-movie_dao = MovieDao(Movie, db)
-movie_service = MovieService(movie_dao)
+genre_schema = GenreSchema()
+genre_schemas = GenreSchema(many=True)
+
+genre_dao = GenreDAO(Genre, db)
+genre_service = GenreService(genre_dao)
