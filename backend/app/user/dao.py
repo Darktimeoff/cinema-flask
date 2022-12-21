@@ -17,6 +17,9 @@ class UserDAO(Dao):
     def get_by_id(self, id: int) -> User | None:
         return self.query.get(id)
 
+    def get_by_email(self, email: str) -> User | None:
+        return self.query.filter(User.email == email).first()
+
     def create(self, data: dict) -> User:
         user = User(**data)
 

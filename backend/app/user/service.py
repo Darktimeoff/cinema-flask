@@ -14,6 +14,9 @@ class UserService:
     def __init__(self, dao: UserDAO):
         self.dao = dao
 
+    def get_by_email(self, email: str):
+        return self.dao.get_by_email(email)
+
     def get_by_id(self, id: int):
         if type(id) is not int:
             raise ValidationError(message=INVALID_ID_TYPE, status_code=1)
