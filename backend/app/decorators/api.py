@@ -1,9 +1,16 @@
-from marshmallow import Schema
-from flask import request, jsonify
+from flask import request
 from app.classes.paginator import Paginator
-#pagination decorator
 
-def pagination(schema: Schema, per_page: int):
+def serialized(schema):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            response = func(*args, **kwargs)
+      
+            return schema.dump(response)
+        return wrapper
+    return decorator
+
+def pagination(per_page: int):
     def decorator(func):
         def wrapper(*args, **kwargs):
             page = request.args.get('page', None)
@@ -17,12 +24,7 @@ def pagination(schema: Schema, per_page: int):
             else:
                 response = response.all()
 
-            list_ = schema.dump(response)
-
-            return jsonify({
-                "count": paginator.count,
-                "results": list_
-            })
+            return response
 
         return wrapper
 
