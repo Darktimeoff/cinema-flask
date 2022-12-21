@@ -7,9 +7,11 @@ class BaseSchema(Schema):
 
 class DirectorSchema(BaseSchema):
     name = fields.String(required=True)
+    movies = fields.List(fields.Nested(lambda: MovieSchema(exclude=('genre', 'director',))), dump_only=True)
 
 class GenreSchema(BaseSchema):
     name = fields.String(required=True)
+    movies = fields.List(fields.Nested(lambda: MovieSchema(exclude=('genre', 'director',))), dump_only=True)
 
 class MovieSchema(BaseSchema):
     title = fields.String(required=True)

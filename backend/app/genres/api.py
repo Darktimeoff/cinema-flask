@@ -18,6 +18,6 @@ class Genres(Resource):
 class Genre(Resource):
     @serialized(genre_schema)
     def get(self, genre_id: int):
-        movie = genre_service.get_by_id(genre_id)
+        genre = genre_service.get_by_id(genre_id)
 
-        return movie
+        return genre
