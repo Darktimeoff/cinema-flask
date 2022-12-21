@@ -10,6 +10,9 @@ from .main import get_env
 
 
 def str_to_hashfunc(s: str) -> str:
+    if type(s) is not str:
+        raise TypeError('s arg must be string')
+
     hash_digest = pbkdf2_hmac(
         get_env('HASH_ALG'),
         s.encode('utf-8'),
@@ -50,6 +53,6 @@ def get_access_token(data):
 
 
 def get_refresh_token(data):
-    delta = datetime.timedelta(minutes=int(get_env('TOKEN_EXPIRE_DAYS')))
+    delta = datetime.timedelta(days=int(get_env('TOKEN_EXPIRE_DAYS')))
 
     return generate_jwt(data, delta)
