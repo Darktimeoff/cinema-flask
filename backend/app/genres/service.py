@@ -11,7 +11,7 @@ class GenreService:
         self.dao = dao
 
     def get_all(self):
-        return self.dao.query
+        return self.dao.get_query()
 
     def get_by_id(self, id: int) -> Genre:
         if type(id) is not int:

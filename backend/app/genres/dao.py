@@ -13,6 +13,9 @@ class GenreDAO(Dao):
         self.__query = self.__model.query
         return self.__query
 
+    def get_query(self):
+        return self.query
+
     def get_all(self):
         return self.query.all()  # type: ignore
 
