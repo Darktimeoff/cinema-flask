@@ -45,7 +45,7 @@
       {
         "label": "Run TEST",
         "type": "shell",
-        "command": "cd backend && pipenv run python3 -m pytest -v -s",
+        "command": "cd backend && pipenv run python3 -m pytest",
         "presentation": {
           "reveal": "always",
           "panel": "new",
