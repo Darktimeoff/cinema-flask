@@ -3,7 +3,7 @@ from app.exceptions.service import ValidationError
 from app.utils.security import compare_hashfunc, str_to_hashfunc
 
 from .const import (INVALID_BODY, INVALID_ID_TYPE, INVALID_KEYS_FOR_UPDATE,
-                    USER_NOT_FOUND)
+                    USER_NOT_FOUND, INVALIDA_DATA_FOR_CHANGE_PASSWORD, PASSWORD_DOESNOT_MATCH)
 from app.container import user_schema
 from .dao import UserDAO
 
@@ -79,6 +79,35 @@ class UserService:
         self.dao.delete(id)
 
         return True
+
+    def change_password(self, id: int, data: dict):
+        if type(id) is not int:
+            raise ValidationError(message=INVALID_ID_TYPE, status_code=1)
+        
+        if type(data) is not dict:
+            raise ValidationError(message=INVALID_BODY, status_code=2)
+
+        if set(data.keys()) != {'password_1', 'password_2'}:
+            raise ValidationError(
+                message=INVALIDA_DATA_FOR_CHANGE_PASSWORD, status_code=3)
+
+        user = self.dao.get_by_id(id)
+
+        if not user:
+            raise NotFoundError(message=USER_NOT_FOUND, status_code=4)
+
+        if not self.compare_password(user.password, data['password_1']):
+            raise ValidationError(message=PASSWORD_DOESNOT_MATCH, status_code=5)
+
+        new_password = {
+            "password": self.generate_password(data['password_2'])
+        }
+
+        user = self.dao.update(id, new_password)
+
+        return user
+        
+
 
     def generate_password(self, password: str) -> str:
         return str_to_hashfunc(password)

@@ -7,7 +7,7 @@ from app.models import User
 def user_dao():
     user_dao = UserDAO(None, None)
 
-    user1 = User(id=1, email="test@test.com", password="test")
+    user1 = User(id=1, email="test@test.com", password="dc3khc7ThHEFQ6lBRvfk7W04URYH8eG5BpoD6M/orJM=")
 
     def update(id,data):
         for key, value in data.items():

@@ -4,7 +4,7 @@ from app.models import User
 from app.exceptions.service import ValidationError
 from app.exceptions.http import NotFoundError
 
-from app.user.const import INVALID_ID_TYPE, USER_NOT_FOUND, INVALID_BODY, INVALID_KEYS_FOR_UPDATE
+from app.user.const import INVALID_ID_TYPE, PASSWORD_DOESNOT_MATCH, USER_NOT_FOUND, INVALID_BODY,INVALIDA_DATA_FOR_CHANGE_PASSWORD, INVALID_KEYS_FOR_UPDATE
 
 class TestUserService:
     user_service: UserService
@@ -203,3 +203,56 @@ class TestUserService:
         result = self.user_service.compare_password(password, 'test')
 
         assert result is False, 'must be diff'
+
+    def test_change_password(self):
+        old_password = 'test'
+        new_password = 'test1'
+
+        result = self.user_service.change_password(1, {
+            'password_1': old_password,
+            'password_2': new_password
+        })
+
+        check_new_password = self.user_service.compare_password(result.password, new_password)
+        
+        assert check_new_password is True
+        assert type(result) is User, 'result must be User'
+
+    def test_change_password_id_typeerror(self):
+        with pytest.raises(ValidationError) as e:
+            self.user_service.change_password('1', {})
+        assert str(e.value) == INVALID_ID_TYPE
+        assert e.value.status_code == 1
+    
+    def test_change_password_body_typeerror(self):
+        with pytest.raises(ValidationError) as e:
+            self.user_service.change_password(1, '1')
+        assert str(e.value) == INVALID_BODY
+        assert e.value.status_code == 2
+
+    def test_change_password_payload_invalid(self):
+        with pytest.raises(ValidationError) as e:
+            self.user_service.change_password(1, {'password_old': 123, 'password_new': 123})
+        assert str(e.value) == INVALIDA_DATA_FOR_CHANGE_PASSWORD
+        assert e.value.status_code == 3
+
+    def test_change_password_payload_invalid(self):
+
+        self.user_service.dao.get_by_id.return_value = None
+
+        with pytest.raises(NotFoundError) as e:
+            self.user_service.change_password(1, {'password_1': 123, 'password_2': 123})
+        assert str(e.value) == USER_NOT_FOUND
+        assert e.value.status_code == 4
+
+    def test_change_password_not_compare(self):
+        old_password = 'test1'
+        new_password = 'test2'
+        
+        with pytest.raises(ValidationError) as e:
+            self.user_service.change_password(1, {
+                'password_1': old_password,
+                'password_2': new_password
+            })
+        assert str(e.value) == PASSWORD_DOESNOT_MATCH
+        assert e.value.status_code == 5

@@ -14,6 +14,11 @@ class InternalServerError(BasicHTTPError):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(code=self.code, *args, **kwargs)
 
+class ForbidenError(BasicHTTPError):
+    code = 403
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(code=self.code, *args, **kwargs)
 
 class NotFoundError(BasicHTTPError):
     code = 404
