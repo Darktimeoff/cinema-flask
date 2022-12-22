@@ -14,6 +14,14 @@ class UserMovieService:
         self.movie_service = movie_service
         self.dao = dao
 
+    def get_all(self, uid: int):
+        if type(uid) is not int:
+            raise ValidationError(message=INVALID_ID_TYPE, status_code=1)
+        
+        user = self.user_service.get_by_id(uid)
+
+        return user.favourite_movies
+
     def add_to_favourite(self, uid: int, mid: int):
         if type(uid) is not int or type(mid) is not int:
             raise ValidationError(message=INVALID_ID_TYPE, status_code=1)
@@ -24,7 +32,7 @@ class UserMovieService:
         user.favourite_movies.append(movie)
         self.dao.update_data_in_db(user)
 
-        return user
+        return user.favourite_movies
 
     def delete_from_favourite(self, uid: int, mid: int):
         if type(uid) is not int or type(mid) is not int:
@@ -36,5 +44,5 @@ class UserMovieService:
         user.favourite_movies.remove(movie)
         self.dao.update_data_in_db(user)
 
-        return user
+        return user.favourite_movies
 

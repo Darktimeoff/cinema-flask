@@ -30,7 +30,7 @@ def create_app(config) -> Flask:
 def configure_app(app: Flask):
     db.init_app(app)
     api.init_app(app)
-    CORS(app)
+    CORS(app, resources=['http://localhost:3000/'])
     Migrate(app, db, render_as_batch=True)
 
     app.register_error_handler(BasicHTTPError, base_service_error_handler)
