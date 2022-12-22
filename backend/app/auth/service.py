@@ -28,17 +28,17 @@ class AuthService:
             raise NotFoundError(message=UNCORECT_TYPE_EMAIL_PASSWORD, status_code=2)
 
         if not is_refresh:
-            if password is not str:
+            if type(password) is not str:
                 raise ValidationError(
-                    message=UNCORECT_TYPE_EMAIL_PASSWORD, status_code=1)
+                    message=UNCORECT_TYPE_EMAIL_PASSWORD, status_code=3)
 
             if not self.user_service.compare_password(user.password, password):
                 raise BadRequestError(
-                    message=USER_PASSWORD_WRONG, status_code=3)
+                    message=USER_PASSWORD_WRONG, status_code=4)
 
         if refresh_token and user.refresh_token != refresh_token:
             raise BadRequestError(
-                message=USER_WRONG_REFRESH_TOKEN, status_code=4)
+                message=USER_WRONG_REFRESH_TOKEN, status_code=5)
 
         data = user_schema.dump(user)
 
@@ -80,8 +80,8 @@ class AuthService:
 
         return tokens
 
-    def login(self, email: str, password: str, refresh_token: str = None) -> dict:
-        tokens = self.generate_tokens(email, password, refresh_token)
+    def login(self, email: str, password: str) -> dict:
+        tokens = self.generate_tokens(email, password, None)
 
         user = self.user_service.get_by_email(email)
 
