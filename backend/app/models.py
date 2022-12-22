@@ -58,7 +58,7 @@ class User(Base):
 
     favorite_genre = relationship(Genre)
     
-    favourite_movie = relationship('FavouriteUserMovie')
+    favourite_movies = relationship('Movie', secondary='favourite_user_movies')
 
 class FavouriteUserMovie(db.Model):
     __tablename__ = 'favourite_user_movies'

@@ -31,3 +31,4 @@ class UserSchema(BaseSchema):
     refresh_token = fields.String(load_only=True)
     favorite_genre_id = fields.Integer(load_only=True)
     favorite_genre = fields.Nested(GenreSchema, dump_only=True)
+    favourite_movies = fields.List(fields.Nested(MovieSchema), dump_only=True)
