@@ -50,7 +50,6 @@ class UserService:
 
         keys = set(user_schema.declared_fields.keys())
         data_keys = set(data.keys())
-        print('keys______', keys, data_keys)
 
         if not data_keys.issubset(keys):
             raise ValidationError(
@@ -75,7 +74,7 @@ class UserService:
         user = self.dao.get_by_id(id)
 
         if not user:
-            raise NotFoundError(message=USER_NOT_FOUND, status_code=4)
+            raise NotFoundError(message=USER_NOT_FOUND, status_code=2)
 
         self.dao.delete(id)
 
