@@ -47,6 +47,10 @@ class UserService:
 
         if type(data) is not dict:
             raise ValidationError(message=INVALID_BODY, status_code=2)
+        
+        if 'favourite_genre' in data:
+            data['favorite_genre_id'] = data['favourite_genre']
+            del data['favourite_genre']
 
         keys = set(user_schema.declared_fields.keys())
         data_keys = set(data.keys())
@@ -62,7 +66,7 @@ class UserService:
 
         if 'password' in data:
             data['password'] = self.generate_password(data['password'])
-
+        print('___update___',data)
         user = self.dao.update(id, data)
 
         return user
@@ -87,7 +91,7 @@ class UserService:
         if type(data) is not dict:
             raise ValidationError(message=INVALID_BODY, status_code=2)
 
-        if set(data.keys()) != {'password_1', 'password_2'}:
+        if set(data.keys()) != {'old_password', 'new_password'}:
             raise ValidationError(
                 message=INVALIDA_DATA_FOR_CHANGE_PASSWORD, status_code=3)
 
@@ -96,11 +100,11 @@ class UserService:
         if not user:
             raise NotFoundError(message=USER_NOT_FOUND, status_code=4)
 
-        if not self.compare_password(user.password, data['password_1']):
+        if not self.compare_password(user.password, data['old_password']):
             raise ValidationError(message=PASSWORD_DOESNOT_MATCH, status_code=5)
 
         new_password = {
-            "password": self.generate_password(data['password_2'])
+            "password": self.generate_password(data['new_password'])
         }
 
         user = self.dao.update(id, new_password)

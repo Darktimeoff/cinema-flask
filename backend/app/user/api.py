@@ -26,7 +26,7 @@ class User(Resource):
 @user_ns.route("/password/")
 class UserPassword(Resource):
     @auth_required
-    def post(self, user):
+    def put(self, user):
         data = request.get_json()
 
         user = user_service.change_password(user.id, data)

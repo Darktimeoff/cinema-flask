@@ -29,4 +29,5 @@ class UserSchema(BaseSchema):
     name = fields.String()
     surname = fields.String()
     refresh_token = fields.String(load_only=True)
-
+    favorite_genre_id = fields.Integer(load_only=True)
+    favorite_genre = fields.Nested(GenreSchema, dump_only=True)

@@ -36,7 +36,7 @@ export const Profile = () => {
     setEmail(data.email || "");
     setName(data.name || "");
     setSurname(data.surname || "");
-    setGenre(data.favourite_genre || "");
+    setGenre(data.favorite_genre || "");
   };
 
   const submitPasswordChange = () => {
@@ -54,7 +54,7 @@ export const Profile = () => {
     updateUser({
       ...(name && {name: name}),
       ...(surname && {surname: surname}),
-      ...(genre && {favourite_genre: genre}),
+      ...(genre && {favourite_genre: Number(genre)}),
     })
       .then(res => {
         profileUpdater(res.data);

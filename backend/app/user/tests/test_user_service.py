@@ -209,8 +209,8 @@ class TestUserService:
         new_password = 'test1'
 
         result = self.user_service.change_password(1, {
-            'password_1': old_password,
-            'password_2': new_password
+            'old_password': old_password,
+            'new_password': new_password
         })
 
         check_new_password = self.user_service.compare_password(result.password, new_password)
@@ -241,7 +241,7 @@ class TestUserService:
         self.user_service.dao.get_by_id.return_value = None
 
         with pytest.raises(NotFoundError) as e:
-            self.user_service.change_password(1, {'password_1': 123, 'password_2': 123})
+            self.user_service.change_password(1, {'old_password': 123, 'new_password': 123})
         assert str(e.value) == USER_NOT_FOUND
         assert e.value.status_code == 4
 
@@ -251,8 +251,8 @@ class TestUserService:
         
         with pytest.raises(ValidationError) as e:
             self.user_service.change_password(1, {
-                'password_1': old_password,
-                'password_2': new_password
+                'old_password': old_password,
+                'new_password': new_password
             })
         assert str(e.value) == PASSWORD_DOESNOT_MATCH
         assert e.value.status_code == 5
