@@ -2,7 +2,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from .setup.db.models import Base
-
+from .setup.db import db
 
 class Genre(Base):
     __tablename__ = 'genres'
@@ -57,3 +57,11 @@ class User(Base):
     favorite_genre_id = Column(Integer, ForeignKey('genres.id'))
 
     favorite_genre = relationship(Genre)
+    
+    favourite_movie = relationship('FavouriteUserMovie')
+
+class FavouriteUserMovie(db.Model):
+    __tablename__ = 'favourite_user_movies'
+
+    user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+    movie_id = Column(Integer, ForeignKey('movies.id'), primary_key=True)
